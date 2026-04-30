@@ -134,7 +134,11 @@ footer{padding:38px 52px;border-top:1px solid rgba(255,255,255,0.08);background:
 
 <section class="hero">
   <div class="hero-glow"></div>
-  <h1 class="hero-title">Supporting<br><span id="rotating-word" style="color:var(--blue);font-style:italic">Accelerators</span><br><span style="color:var(--text);font-style:normal">Globally</span></h1>
+  <h1 class="hero-title">
+    <span style="display:block">Supporting</span>
+    <span id="rotating-word" style="display:block;color:var(--blue);font-style:italic;min-height:1.07em">Accelerators</span>
+    <span style="display:block;color:var(--text);font-style:normal">Globally</span>
+  </h1>
   <p class="hero-sub">See how we can support you.</p>
   <div class="hero-pills">
     <div class="pills-row">
@@ -241,12 +245,12 @@ document.querySelectorAll('.reveal').forEach(r => io.observe(r));
 </script>
 <style>
 #rotating-word {
-  display: inline-block;
+  display: block;
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
 #rotating-word.fade-out {
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateY(-8px);
 }
 #rotating-word.fade-in {
   opacity: 1;
