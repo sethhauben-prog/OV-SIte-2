@@ -281,11 +281,9 @@ document.querySelectorAll('.reveal').forEach(r => io.observe(r));
   /* Land-like texture via brighter patches using point cloud */
   const landGeo = new THREE.BufferGeometry();
   const landVerts = [];
-  // Scatter bright points on sphere surface to simulate landmasses
   for(let i = 0; i < 4000; i++){
     const theta = Math.random() * Math.PI * 2;
     const phi = Math.acos(2 * Math.random() - 1);
-    // bias toward mid-latitudes (landmass-like)
     if(Math.abs(Math.cos(phi)) > 0.85) continue;
     landVerts.push(
       (R + 0.002) * Math.sin(phi) * Math.cos(theta),
@@ -439,34 +437,96 @@ document.querySelectorAll('.reveal').forEach(r => io.observe(r));
 
   globeGroup.rotation.y = -0.3;  // rotate so Atlantic/Europe faces front at load
 
-  // City pulse dots
-  const cityDefs = [[40,-74],[51,0],[48,2],[5,0],[37,-122],[35,139],[1,103],[-34,-58],[19,72]];
-  const pulseDotsData = cityDefs.map(([la,lo]) => {
-    const v = latLonToVec(la, lo);
+  // Canvas textures for square and circle sprites
+  function makeTex(shape){
+    const c = document.createElement('canvas'); c.width = 32; c.height = 32;
+    const ctx = c.getContext('2d');
+    ctx.clearRect(0,0,32,32);
+    ctx.fillStyle = '#ffffff';
+    if(shape === 'square') ctx.fillRect(8, 8, 16, 16);
+    else { ctx.beginPath(); ctx.arc(16,16,12,0,Math.PI*2); ctx.fill(); }
+    return new THREE.CanvasTexture(c);
+  }
+  const sqTex = makeTex('square');
+  const ciTex = makeTex('circle');
+
+  // City definitions with staggered activation times
+  // City PAIRS — each pair activates simultaneously, then arc connects them
+  const cityPairs = [
+    {a:[40,-74],  b:[51,0],    activateAt:200,  h:0.5,  col:0x00cfff},  // NY ↔ London
+    {a:[37,-122], b:[35,139],  activateAt:200,  h:0.6,  col:0x00cfff},  // SF ↔ Tokyo
+    {a:[48,2],    b:[19,72],   activateAt:400,  h:0.55, col:0xffffff},  // Paris ↔ Mumbai
+    {a:[-34,-58], b:[1,103],   activateAt:400,  h:0.6,  col:0x00cfff},  // BA ↔ Singapore
+    {a:[55,37],   b:[31,121],  activateAt:600,  h:0.45, col:0xffffff},  // Moscow ↔ Shanghai
+    {a:[-33,151], b:[37,-122], activateAt:600,  h:0.65, col:0x00cfff},  // Sydney ↔ SF
+    {a:[52,13],   b:[40,-74],  activateAt:800,  h:0.5,  col:0xffffff},  // Berlin ↔ NY
+    {a:[-1,37],   b:[48,2],    activateAt:800,  h:0.55, col:0x00cfff},  // Nairobi ↔ Paris
+    {a:[25,-80],  b:[51,0],    activateAt:1000, h:0.5,  col:0x00cfff},  // Miami ↔ London
+    {a:[19,72],   b:[35,139],  activateAt:1000, h:0.5,  col:0xffffff},  // Mumbai ↔ Tokyo
+    {a:[1,103],   b:[51,0],    activateAt:1200, h:0.65, col:0x00cfff},  // Singapore ↔ London
+    {a:[40,-74],  b:[-34,-58], activateAt:1200, h:0.45, col:0xffffff},  // NY ↔ BA
+    {a:[48,2],    b:[37,-122], activateAt:1400, h:0.6,  col:0x00cfff},  // Paris ↔ SF
+    {a:[31,121],  b:[40,-74],  activateAt:1400, h:0.65, col:0x00cfff},  // Shanghai ↔ NY
+    {a:[55,37],   b:[19,72],   activateAt:1600, h:0.4,  col:0xffffff},  // Moscow ↔ Mumbai
+    {a:[-33,151], b:[1,103],   activateAt:1600, h:0.4,  col:0x00cfff},  // Sydney ↔ Singapore
+    {a:[52,13],   b:[35,139],  activateAt:1800, h:0.7,  col:0x00cfff},  // Berlin ↔ Tokyo
+    {a:[-1,37],   b:[37,-122], activateAt:1800, h:0.75, col:0xffffff},  // Nairobi ↔ SF
+  ];
+
+  // Build flat city list from pairs (each city gets a node)
+  const cityDefs = [];
+  cityPairs.forEach(({a, b, activateAt}) => {
+    cityDefs.push({ll:a, activateAt});
+    cityDefs.push({ll:b, activateAt});
+  });
+
+  const pulseDotsData = cityDefs.map(({ll, activateAt}) => {
+    const v = latLonToVec(ll[0], ll[1]);
+
+    // Square sprite — starts visible, dim
+    const sqMat = new THREE.SpriteMaterial({map: sqTex, color:0x1a6abf, transparent:true, opacity:0.35, depthWrite:false, blending:THREE.AdditiveBlending});
+    const square = new THREE.Sprite(sqMat);
+    square.position.copy(v);
+    square.scale.setScalar(0.055);
+    globeGroup.add(square);
+
+    // Circle dot — starts hidden
     const inner = new THREE.Mesh(
       new THREE.SphereGeometry(0.016, 8, 8),
-      new THREE.MeshBasicMaterial({color:0x00efff, transparent:true, opacity:0.9})
+      new THREE.MeshBasicMaterial({color:0x00efff, transparent:true, opacity:0.0})
     );
     inner.position.copy(v);
     globeGroup.add(inner);
+
+    // Outer pulse ring — starts hidden
     const outer = new THREE.Mesh(
       new THREE.SphereGeometry(0.032, 8, 8),
-      new THREE.MeshBasicMaterial({color:0x00efff, transparent:true, opacity:0.25, side:THREE.FrontSide})
+      new THREE.MeshBasicMaterial({color:0x00efff, transparent:true, opacity:0.0})
     );
     outer.position.copy(v);
     globeGroup.add(outer);
-    return {inner, outer, phase: Math.random() * Math.PI * 2};
+
+    return {square, inner, outer, activateAt, state:'square', progress:0, phase:Math.random()*Math.PI*2};
   });
 
-  // Pre-spawn 8 arcs spread across all globe regions, staggered evenly
-  spawnArc();                          // 1. NY → London        (Atlantic)
-  setTimeout(spawnArc, 400);           // 2. SF → Tokyo         (Pacific)
-  setTimeout(spawnArc, 800);           // 3. BA → Mumbai        (S.America → Asia)
-  setTimeout(spawnArc, 1200);          // 4. Singapore → Paris  (SE Asia → Europe)
-  setTimeout(spawnArc, 1800);          // 5. Mumbai → SF
-  setTimeout(spawnArc, 2400);          // 6. London → BA
-  setTimeout(spawnArc, 3000);          // 7. Tokyo → Singapore
-  setTimeout(spawnArc, 3600);          // 8. W.Africa → NY
+  // After each pair finishes activating (~700ms), spawn an arc connecting that specific pair
+  cityPairs.forEach(({a, b, activateAt, h, col}) => {
+    setTimeout(() => {
+      if(activeArcs.length >= 4) return;
+      const p1 = latLonToVec(a[0], a[1]);
+      const p2 = latLonToVec(b[0], b[1]);
+      const pts = arcPoints(p1, p2, h);
+      const geo = new THREE.BufferGeometry();
+      const mat = new THREE.LineBasicMaterial({color:col, transparent:true, opacity:0.0});
+      const line = new THREE.Line(geo, mat);
+      globeGroup.add(line);
+      const dot = new THREE.Mesh(new THREE.SphereGeometry(0.022,8,8), new THREE.MeshBasicMaterial({color:0x00efff, transparent:true, opacity:0.0}));
+      dot.position.copy(pts[0]); globeGroup.add(dot);
+      const dot2 = new THREE.Mesh(new THREE.SphereGeometry(0.022,8,8), new THREE.MeshBasicMaterial({color:0x00efff, transparent:true, opacity:0.0}));
+      dot2.position.copy(pts[pts.length-1]); globeGroup.add(dot2);
+      activeArcs.push({pts, line, dot, dot2, progress:0, fade:0, holdTimer:0, opacity:0});
+    }, activateAt + 700);
+  });
 
   // Spawn arcs on staggered intervals
   let lastSpawn = 0;
@@ -487,12 +547,31 @@ document.querySelectorAll('.reveal').forEach(r => io.observe(r));
       dl.dot2.material.opacity = 0.65 + 0.2  * Math.sin(dl.phase + 2);
     });
 
-    // Pulse city dots
+    // Animate city nodes: square → dot transition
     pulseDotsData.forEach(pd => {
       pd.phase += 0.04;
-      const s = 0.7 + 0.3 * Math.sin(pd.phase);
-      pd.outer.material.opacity = 0.1 + 0.2 * Math.sin(pd.phase);
-      pd.outer.scale.setScalar(s);
+      if(pd.state === 'square'){
+        if(clock >= pd.activateAt){
+          pd.state = 'activating';
+          pd.progress = 0;
+        }
+      } else if(pd.state === 'activating'){
+        pd.progress = Math.min(pd.progress + 0.04, 1);
+        const p = pd.progress;
+        // Square fades out
+        pd.square.material.opacity = 0.35 * (1 - p);
+        pd.square.scale.setScalar(0.055 + p * 0.02);
+        // Dot fades in
+        pd.inner.material.opacity = p * 0.9;
+        pd.outer.material.opacity = p * 0.25;
+        if(p >= 1){ pd.state = 'done'; pd.square.visible = false; }
+      } else {
+        // Pulse steadily
+        const s = 0.7 + 0.3 * Math.sin(pd.phase);
+        pd.inner.material.opacity = 0.8 + 0.15 * Math.sin(pd.phase);
+        pd.outer.material.opacity = 0.1 + 0.2  * Math.sin(pd.phase);
+        pd.outer.scale.setScalar(s);
+      }
     });
 
     // Spawn new arcs
