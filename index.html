@@ -36,24 +36,24 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .btn-nav:hover{background:var(--blue-dk);transform:translateY(-1px)}
 
 /* HERO */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:68px 24px 180px;position:relative;overflow:hidden;background:linear-gradient(160deg,#e4f4fc 0%,#f0f8fd 40%,#ffffff 100%)}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:68px 24px 180px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 110%, #0a2a6e 0%, #06122e 40%, #030a1a 100%)}
 
 .hero-glow{position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:900px;height:560px;background:radial-gradient(ellipse,rgba(0,140,220,.1) 0%,transparent 68%);pointer-events:none}
 
-.hero-title{font-family:var(--fds);font-size:clamp(46px,7vw,86px);font-weight:400;line-height:1.07;letter-spacing:-.02em;max-width:820px;margin-bottom:28px;color:var(--text);animation:fadeUp .7s .05s ease both;position:relative}
+.hero-title{font-family:var(--fds);font-size:clamp(46px,7vw,86px);font-weight:400;line-height:1.07;letter-spacing:-.02em;max-width:820px;margin-bottom:28px;color:#ffffff;animation:fadeUp .7s .05s ease both;position:relative}
 .hero-title em{font-style:italic;color:var(--blue)}
-.hero-sub{font-size:18px;color:var(--muted);max-width:400px;line-height:1.6;margin-bottom:52px;animation:fadeUp .7s .15s ease both;position:relative}
+.hero-sub{font-size:18px;color:rgba(255,255,255,0.75);max-width:400px;line-height:1.6;margin-bottom:52px;animation:fadeUp .7s .15s ease both;position:relative}
 
 .hero-pills{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:48px;animation:fadeUp .7s .25s ease both;position:relative}
 .pills-row{display:flex;gap:10px;justify-content:center}
-.pill{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--border);border-radius:40px;padding:10px 22px;font-size:14px;font-weight:500;color:var(--text);cursor:pointer;text-decoration:none;transition:border-color .2s,background .2s,color .2s,transform .15s,box-shadow .2s;box-shadow:0 1px 6px rgba(0,140,220,.07)}
-.pill:hover{border-color:var(--blue);background:var(--blue-lt);color:var(--blue-dk);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,140,220,.15)}
+.pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.08);border:1.5px solid rgba(0,180,255,0.35);border-radius:40px;padding:10px 22px;font-size:14px;font-weight:500;color:rgba(255,255,255,0.9);cursor:pointer;text-decoration:none;transition:border-color .2s,background .2s,color .2s,transform .15s,box-shadow .2s;box-shadow:0 1px 6px rgba(0,140,220,.15)}
+.pill:hover{border-color:#00c8ff;background:rgba(0,180,255,0.18);color:#fff;transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,200,255,.3)}
 
 .hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;animation:fadeUp .7s .35s ease both;position:relative}
 .btn-hero{background:var(--blue);color:#fff;font-size:15px;font-weight:600;font-family:var(--fbd);padding:14px 32px;border-radius:40px;text-decoration:none;border:none;cursor:pointer;transition:background .2s,transform .15s,box-shadow .2s;box-shadow:0 4px 20px rgba(0,140,220,.3)}
 .btn-hero:hover{background:var(--blue-dk);transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,140,220,.35)}
-.btn-ghost2{color:var(--muted);font-size:15px;font-family:var(--fbd);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .2s}
-.btn-ghost2:hover{color:var(--blue)}
+.btn-ghost2{color:rgba(255,255,255,0.55);font-size:15px;font-family:var(--fbd);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .2s}
+.btn-ghost2:hover{color:#00c8ff}
 .btn-ghost2 svg{transition:transform .2s}
 .btn-ghost2:hover svg{transform:translateX(3px)}
 
@@ -133,8 +133,7 @@ footer{padding:38px 52px;border-top:1px solid rgba(255,255,255,0.08);background:
 </nav>
 
 <section class="hero">
-  <div class="hero-glow"></div>
-  <canvas id="globe-canvas" style="position:absolute;inset:0;width:100%;height:100%;opacity:0.38;pointer-events:none;z-index:0"></canvas>
+  <canvas id="globe-canvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0"></canvas>
   <h1 class="hero-title">Supporting Startups<br><em>Globally</em></h1>
   <p class="hero-sub">See how we can support you.</p>
   <div class="hero-pills">
@@ -240,83 +239,288 @@ document.querySelectorAll('.reveal').forEach(r => io.observe(r));
 (function(){
   const canvas = document.getElementById('globe-canvas');
   const hero = canvas.parentElement;
-  const W = hero.offsetWidth, H = hero.offsetHeight;
+  let W = hero.offsetWidth, H = hero.offsetHeight;
+
   const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
   renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
   renderer.setSize(W, H);
+
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(45, W/H, 0.1, 100);
-  camera.position.z = 2.6;
+  const camera = new THREE.PerspectiveCamera(50, W/H, 0.1, 100);
+  camera.position.z = 2.2;
 
   const R = 1;
 
-  /* sphere base */
-  const sphereGeo = new THREE.SphereGeometry(R, 64, 64);
-  const sphereMat = new THREE.MeshBasicMaterial({
-    color: 0x008cdc, transparent: true, opacity: 0.14, side: THREE.FrontSide
-  });
-  scene.add(new THREE.Mesh(sphereGeo, sphereMat));
+  /* ── STAR FIELD ── */
+  const starGeo = new THREE.BufferGeometry();
+  const starVerts = [];
+  for(let i = 0; i < 1800; i++){
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    const r = 8 + Math.random() * 12;
+    starVerts.push(
+      r * Math.sin(phi) * Math.cos(theta),
+      r * Math.sin(phi) * Math.sin(theta),
+      r * Math.cos(phi)
+    );
+  }
+  starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starVerts, 3));
+  const starMat = new THREE.PointsMaterial({color: 0xffffff, size: 0.045, transparent:true, opacity:0.7});
+  scene.add(new THREE.Points(starGeo, starMat));
 
-  /* lat/lon grid lines */
-  const lineMat = new THREE.LineBasicMaterial({color: 0x008cdc, transparent: true, opacity: 0.85});
+  /* ── GLOBE GROUP (positioned so it rises from bottom) ── */
+  const globeGroup = new THREE.Group();
+  globeGroup.position.y = -1.35;  // lowered so globe appears only below pills
+  scene.add(globeGroup);
+
+  /* Solid sphere - deep blue ocean */
+  const sphereGeo = new THREE.SphereGeometry(R, 80, 80);
+  const sphereMat = new THREE.MeshBasicMaterial({color: 0x0a2a6e, transparent:true, opacity:0.92});
+  globeGroup.add(new THREE.Mesh(sphereGeo, sphereMat));
+
+  /* Land-like texture via brighter patches using point cloud */
+  const landGeo = new THREE.BufferGeometry();
+  const landVerts = [];
+  // Scatter bright points on sphere surface to simulate landmasses
+  for(let i = 0; i < 4000; i++){
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    // bias toward mid-latitudes (landmass-like)
+    if(Math.abs(Math.cos(phi)) > 0.85) continue;
+    landVerts.push(
+      (R + 0.002) * Math.sin(phi) * Math.cos(theta),
+      (R + 0.002) * Math.sin(phi) * Math.sin(theta),
+      (R + 0.002) * Math.cos(phi)
+    );
+  }
+  landGeo.setAttribute('position', new THREE.Float32BufferAttribute(landVerts, 3));
+  const landMat = new THREE.PointsMaterial({color: 0x00aaff, size: 0.022, transparent:true, opacity:0.55});
+  globeGroup.add(new THREE.Points(landGeo, landMat));
+
+  /* Lat/lon grid */
   const gridGroup = new THREE.Group();
-
-  const latCount = 12, lonCount = 24, seg = 128;
+  globeGroup.add(gridGroup);
+  const latCount = 14, lonCount = 24, seg = 128;
 
   for(let i = 1; i < latCount; i++){
-    const lat = (i / latCount) * Math.PI - Math.PI/2;
+    const lat = (i/latCount)*Math.PI - Math.PI/2;
+    const cosLat = Math.cos(lat);
     const pts = [];
     for(let j = 0; j <= seg; j++){
-      const lon = (j / seg) * Math.PI * 2;
-      pts.push(new THREE.Vector3(
-        Math.cos(lat)*Math.cos(lon)*R,
-        Math.sin(lat)*R,
-        Math.cos(lat)*Math.sin(lon)*R
-      ));
+      const lon = (j/seg)*Math.PI*2;
+      pts.push(new THREE.Vector3(cosLat*Math.cos(lon)*R, Math.sin(lat)*R, cosLat*Math.sin(lon)*R));
     }
-    gridGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lineMat));
+    const mat = new THREE.LineBasicMaterial({color:0x1a6abf, transparent:true, opacity: i===Math.round(latCount/2) ? 0.15 : 0.22});
+    gridGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), mat));
   }
-
   for(let i = 0; i < lonCount; i++){
-    const lon = (i / lonCount) * Math.PI * 2;
+    const lon = (i/lonCount)*Math.PI*2;
     const pts = [];
     for(let j = 0; j <= seg; j++){
-      const lat = (j / seg) * Math.PI - Math.PI/2;
-      pts.push(new THREE.Vector3(
-        Math.cos(lat)*Math.cos(lon)*R,
-        Math.sin(lat)*R,
-        Math.cos(lat)*Math.sin(lon)*R
-      ));
+      const lat = (j/seg)*Math.PI - Math.PI/2;
+      pts.push(new THREE.Vector3(Math.cos(lat)*Math.cos(lon)*R, Math.sin(lat)*R, Math.cos(lat)*Math.sin(lon)*R));
     }
-    gridGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lineMat));
+    gridGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({color:0x1a6abf, transparent:true, opacity:0.2})));
   }
 
-  /* outer glow ring */
-  const glowGeo = new THREE.SphereGeometry(R*1.02, 64, 64);
-  const glowMat = new THREE.MeshBasicMaterial({
-    color: 0x008cdc, transparent: true, opacity: 0.04,
-    side: THREE.BackSide
+  /* ── EQUATORIAL GLOW RING ── */
+  const ringGeo = new THREE.TorusGeometry(R * 1.005, 0.018, 8, 200);
+  const ringMat = new THREE.MeshBasicMaterial({color: 0x00cfff, transparent:true, opacity:0.9});
+  const ring = new THREE.Mesh(ringGeo, ringMat);
+  ring.rotation.x = Math.PI / 2;
+  globeGroup.add(ring);
+
+  /* Halo glow */
+  const haloGeo = new THREE.TorusGeometry(R * 1.005, 0.055, 8, 200);
+  const haloMat = new THREE.MeshBasicMaterial({color: 0x00a8ff, transparent:true, opacity:0.25});
+  const halo = new THREE.Mesh(haloGeo, haloMat);
+  halo.rotation.x = Math.PI / 2;
+  globeGroup.add(halo);
+
+  /* Atmosphere rim */
+  const atmosGeo = new THREE.SphereGeometry(R * 1.06, 64, 64);
+  const atmosMat = new THREE.MeshBasicMaterial({color: 0x0055cc, transparent:true, opacity:0.12, side:THREE.BackSide});
+  globeGroup.add(new THREE.Mesh(atmosGeo, atmosMat));
+
+  /* ── ARC LINES (dynamic animated) ── */
+  function latLonToVec(lat, lon){
+    const phi = (90 - lat) * Math.PI/180;
+    const theta = (lon + 180) * Math.PI/180;
+    return new THREE.Vector3(
+      -R * Math.sin(phi) * Math.cos(theta),
+       R * Math.cos(phi),
+       R * Math.sin(phi) * Math.sin(theta)
+    );
+  }
+
+  // Precompute bezier points for an arc
+  function arcPoints(p1, p2, height){
+    const mid = p1.clone().add(p2).multiplyScalar(0.5).normalize().multiplyScalar(R + height);
+    const pts = [];
+    for(let t = 0; t <= 1; t += 0.012){
+      const a = p1.clone().multiplyScalar((1-t)*(1-t));
+      const b = mid.clone().multiplyScalar(2*t*(1-t));
+      const c = p2.clone().multiplyScalar(t*t);
+      pts.push(a.add(b).add(c));
+    }
+    return pts;
+  }
+
+  // Front-facing arcs first (Atlantic region visible at load), then expand globally
+  const allArcDefs = [
+    [40,-74,  51,0,    0.5,  0x00cfff],   // NY → London   (front-facing)
+    [40,-74,  48,2,    0.45, 0x00cfff],   // NY → Paris    (front-facing)
+    [51,0,    48,2,    0.3,  0xffffff],   // London → Paris (front-facing)
+    [5,0,     40,-74,  0.55, 0x00cfff],   // W.Africa → NY  (front-facing)
+    [51,0,    19,72,   0.65, 0x00cfff],   // London → Mumbai
+    [40,-74,  -34,-58, 0.45, 0xffffff],  // NY → Buenos Aires
+    [48,2,    1,103,   0.65, 0x00cfff],   // Paris → Singapore
+    [37,-122, 51,0,    0.55, 0x00cfff],   // SF → London
+    [37,-122, 35,139,  0.6,  0x00cfff],   // SF → Tokyo
+    [19,72,   37,-122, 0.7,  0xffffff],   // Mumbai → SF
+    [35,139,  1,103,   0.4,  0x00cfff],   // Tokyo → Singapore
+    [1,103,   -34,-58, 0.6,  0xffffff],   // Singapore → BA
+  ];
+
+  // Active arc objects
+  const activeArcs = [];
+  const drawnLines = []; // permanent lines that stay
+  let arcDefIndex = 0;
+  // NO shuffle — start with front-facing arcs in order
+
+  function spawnArc(){
+    if(activeArcs.length >= 3) return; // max 3 drawing at once, but drawn lines stay
+    const def = allArcDefs[arcDefIndex % allArcDefs.length];
+    arcDefIndex++;
+    const [la1,lo1,la2,lo2,h,col] = def;
+    const pts = arcPoints(latLonToVec(la1,lo1), latLonToVec(la2,lo2), h);
+
+    // Draw arc progressively using a partial geometry
+    const geo = new THREE.BufferGeometry();
+    const mat = new THREE.LineBasicMaterial({color:col, transparent:true, opacity:0.0});
+    const line = new THREE.Line(geo, mat);
+    globeGroup.add(line);
+
+    // Spawn dot at origin
+    const dotGeo = new THREE.SphereGeometry(0.022, 8, 8);
+    const dotMat = new THREE.MeshBasicMaterial({color:0x00efff, transparent:true, opacity:0.0});
+    const dot = new THREE.Mesh(dotGeo, dotMat);
+    dot.position.copy(pts[0]);
+    globeGroup.add(dot);
+
+    // Spawn dot at destination (hidden until arc arrives)
+    const dot2 = new THREE.Mesh(new THREE.SphereGeometry(0.022, 8, 8),
+      new THREE.MeshBasicMaterial({color:0x00efff, transparent:true, opacity:0.0}));
+    dot2.position.copy(pts[pts.length-1]);
+    globeGroup.add(dot2);
+
+    activeArcs.push({
+      pts, line, dot, dot2,
+      progress: 0,       // 0→1 drawing
+      fade: 0,           // 0=drawing, 1=holding, 2=fading
+      holdTimer: 0,
+      opacity: 0
+    });
+  }
+
+  globeGroup.rotation.y = -0.3;  // rotate so Atlantic/Europe faces front at load
+
+  // City pulse dots
+  const cityDefs = [[40,-74],[51,0],[48,2],[5,0],[37,-122],[35,139],[1,103],[-34,-58],[19,72]];
+  const pulseDotsData = cityDefs.map(([la,lo]) => {
+    const v = latLonToVec(la, lo);
+    const inner = new THREE.Mesh(
+      new THREE.SphereGeometry(0.016, 8, 8),
+      new THREE.MeshBasicMaterial({color:0x00efff, transparent:true, opacity:0.9})
+    );
+    inner.position.copy(v);
+    globeGroup.add(inner);
+    const outer = new THREE.Mesh(
+      new THREE.SphereGeometry(0.032, 8, 8),
+      new THREE.MeshBasicMaterial({color:0x00efff, transparent:true, opacity:0.25, side:THREE.FrontSide})
+    );
+    outer.position.copy(v);
+    globeGroup.add(outer);
+    return {inner, outer, phase: Math.random() * Math.PI * 2};
   });
-  scene.add(new THREE.Mesh(glowGeo, glowMat));
 
-  scene.add(gridGroup);
+  // Pre-spawn 2 arcs immediately at start
+  spawnArc();
+  setTimeout(spawnArc, 600);
 
-  /* center globe */
-  gridGroup.position.x = 0;
-  scene.children.forEach(c => { c.position.x = 0; });
+  // Spawn arcs on staggered intervals
+  let lastSpawn = 0;
+  const SPAWN_INTERVAL = 1800; // ms between new arcs
 
-  let raf;
+  /* ── ANIMATE ── */
+  let clock = 0;
   function animate(){
-    raf = requestAnimationFrame(animate);
-    gridGroup.rotation.y += 0.0018;
+    requestAnimationFrame(animate);
+    clock += 16;
+    globeGroup.rotation.y += 0.0015;
+
+    // Pulse permanent drawn lines
+    drawnLines.forEach(dl => {
+      dl.phase += 0.015;
+      dl.line.material.opacity = 0.45 + 0.12 * Math.sin(dl.phase);
+      dl.dot.material.opacity  = 0.65 + 0.2  * Math.sin(dl.phase + 1);
+      dl.dot2.material.opacity = 0.65 + 0.2  * Math.sin(dl.phase + 2);
+    });
+
+    // Pulse city dots
+    pulseDotsData.forEach(pd => {
+      pd.phase += 0.04;
+      const s = 0.7 + 0.3 * Math.sin(pd.phase);
+      pd.outer.material.opacity = 0.1 + 0.2 * Math.sin(pd.phase);
+      pd.outer.scale.setScalar(s);
+    });
+
+    // Spawn new arcs
+    if(clock - lastSpawn > SPAWN_INTERVAL){
+      spawnArc();
+      lastSpawn = clock;
+    }
+
+    // Update each active arc
+    for(let i = activeArcs.length - 1; i >= 0; i--){
+      const arc = activeArcs[i];
+
+      if(arc.fade === 0){
+        // Drawing phase
+        arc.progress = Math.min(arc.progress + 0.018, 1);
+        arc.opacity = Math.min(arc.opacity + 0.06, 0.85);
+
+        const visCount = Math.max(2, Math.floor(arc.progress * arc.pts.length));
+        arc.line.geometry.setFromPoints(arc.pts.slice(0, visCount));
+        arc.line.material.opacity = arc.opacity;
+        arc.dot.material.opacity = arc.opacity;
+
+        // Move travel dot along arc
+        const travelIdx = Math.min(visCount - 1, arc.pts.length - 1);
+        arc.dot.position.copy(arc.pts[travelIdx]);
+
+        if(arc.progress >= 1){
+          arc.fade = 1;
+          arc.dot2.material.opacity = 1.0;
+        }
+      } else if(arc.fade === 1){
+        // Move to permanent pool immediately so slot frees up for next arc
+        arc.line.material.opacity = 0.55;
+        arc.dot.material.opacity  = 0.8;
+        arc.dot2.material.opacity = 0.8;
+        drawnLines.push({line: arc.line, dot: arc.dot, dot2: arc.dot2, phase: Math.random()*Math.PI*2});
+        activeArcs.splice(i, 1);
+      }
+    }
+
     renderer.render(scene, camera);
   }
   animate();
 
   window.addEventListener('resize', ()=>{
-    const W2 = hero.offsetWidth, H2 = hero.offsetHeight;
-    camera.aspect = W2/H2; camera.updateProjectionMatrix();
-    renderer.setSize(W2, H2);
+    W = hero.offsetWidth; H = hero.offsetHeight;
+    camera.aspect = W/H; camera.updateProjectionMatrix();
+    renderer.setSize(W, H);
   });
 })();
 </script>
