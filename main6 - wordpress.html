@@ -42,7 +42,7 @@ body{background:#080c14;color:#fff;font-family:var(--fbd);font-size:16px;line-he
   width: 100% !important;
   margin: 0 !important;
 }
-.hero-glow{position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:900px;height:560px;background:radial-gradient(ellipse,rgba(0,140,220,.06) 0%,transparent 68%);pointer-events:none}
+
 
 .hero-title{font-family:var(--fds);font-size:clamp(40px,6vw,78px);font-weight:400;line-height:1.08;letter-spacing:-.02em;max-width:860px;margin-bottom:28px;margin-top:40px;color:#fff;animation:fadeUp .7s .05s ease both;position:relative}
 .hero-title em{font-style:italic;color:var(--blue)}
@@ -118,9 +118,7 @@ footer{padding:38px 52px;border-top:1px solid rgba(255,255,255,0.08);background:
 <body>
 
 
-<section class="hero">
-  <div class="hero-glow"></div>
-  <canvas id="globe-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;min-height:600px;pointer-events:none;z-index:0;display:block"></canvas>
+<section class="hero" style="height:100vh!important;min-height:600px!important;background:#080c14!important;position:relative!important;overflow:hidden!important;">
 
   <h1 class="hero-title" style="position:relative;z-index:2">
     Powering <em>AI Startups</em><br>from 0–100
@@ -218,7 +216,9 @@ const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersect
 document.querySelectorAll('.reveal').forEach(r=>io.observe(r));
 </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script type="text/javascript">
+
 
 </body>
 </html>
