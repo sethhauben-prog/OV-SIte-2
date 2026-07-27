@@ -26,21 +26,18 @@ body{background:#080c14;color:#fff;font-family:var(--fbd);font-size:16px;line-he
 
 /* HERO */
 .hero{
-  height: 100vh !important;
-  min-height: 600px !important;
-  max-height: 1200px !important;
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:center !important;
-  justify-content:center !important;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   text-align:center;
-  padding: 80px 24px 160px !important;
-  position:relative !important;
-  overflow:hidden !important;
-  background:#080c14 !important;
-  box-sizing: border-box !important;
-  width: 100% !important;
-  margin: 0 !important;
+  padding:0 24px;
+  position:relative;
+  overflow:hidden;
+  background:#080c14;
+  box-sizing:border-box;
+  width:100%;
+  margin:0;
 }
 
 
@@ -118,7 +115,7 @@ footer{padding:38px 52px;border-top:1px solid rgba(255,255,255,0.08);background:
 <body>
 
 
-<section class="hero" style="height:100vh!important;min-height:600px!important;background:#080c14!important;position:relative!important;overflow:hidden!important;">
+<section class="hero" id="ov-hero">
 
   <h1 class="hero-title" style="position:relative;z-index:2">
     Powering <em>AI Startups</em><br>from 0–100
@@ -220,5 +217,39 @@ document.querySelectorAll('.reveal').forEach(r=>io.observe(r));
 <script type="text/javascript">
 
 
+
+<script>
+(function(){
+  function fixHero(){
+    var hero = document.getElementById('ov-hero');
+    if(!hero) return;
+    var vh = window.innerHeight;
+    hero.style.cssText = [
+      'height:' + vh + 'px',
+      'min-height:600px',
+      'display:flex',
+      'flex-direction:column',
+      'align-items:center',
+      'justify-content:center',
+      'text-align:center',
+      'padding:0 24px',
+      'position:relative',
+      'overflow:hidden',
+      'background:#080c14',
+      'box-sizing:border-box',
+      'width:100%',
+      'margin:0',
+      'max-width:100%'
+    ].join('!important;') + '!important';
+  }
+  // Run immediately, on load, and after a delay to beat WP theme JS
+  fixHero();
+  window.addEventListener('load', fixHero);
+  window.addEventListener('resize', fixHero);
+  setTimeout(fixHero, 100);
+  setTimeout(fixHero, 500);
+  setTimeout(fixHero, 1500);
+})();
+</script>
 </body>
 </html>
