@@ -30,7 +30,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 80px 24px 80px;
+  padding: 60px 24px 120px;
   position: relative;
   overflow: hidden;
   font-family: var(--fbd);
@@ -70,7 +70,7 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  margin-bottom: 56px;
+  margin-bottom: 32px;
 }
 #ov-main6-hero .ov-pills-row {
   display: flex;
@@ -111,13 +111,13 @@
   text-align: center;
   display: block;
   transition: color 0.2s;
+  margin-bottom: 64px;
 }
 #ov-main6-hero .ov-partner:hover { color: #f69631; }
 
-/* ── MORE BUTTON ── */
 #ov-main6-hero .ov-more {
   position: absolute;
-  bottom: 28px;
+  bottom: 48px;
   left: 50%;
   transform: translateX(-50%);
   background: none;
@@ -133,7 +133,18 @@
   white-space: nowrap;
   transition: color 0.2s;
 }
-#ov-main6-hero .ov-more:hover { color: rgba(255,255,255,0.8); }
+
+/* Reduce partner line margin so More button stays in view */
+#ov-main6-hero .ov-partner {
+  font-family: var(--fbd);
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  text-align: center;
+  display: block;
+  transition: color 0.2s;
+  margin-bottom: 60px;
+}
 #ov-main6-hero .ov-more svg { animation: ov-bounce 1.8s ease infinite; }
 
 @keyframes ov-bounce {
