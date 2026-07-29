@@ -288,10 +288,18 @@ footer { background: #0d1b2a !important; border-top: 1px solid rgba(255,255,255,
 #startups-section .card-title { color: #0b1f2e !important; }
 #startups-section .card-desc { color: #4a6070 !important; }
 #startups-section .card-icon {
-  background: #e0f4fd !important;
-  border-color: #9fd8f5 !important;
-  filter: grayscale(1) sepia(1) saturate(4) hue-rotate(175deg) brightness(1.1);
+  background: #008cdc !important;
+  border-color: #0070b5 !important;
+  filter: none !important;
 }
+#startups-section .card-icon span,
+#startups-section .card-icon {
+  -webkit-filter: none;
+}
+/* Target the emoji text inside the icon box */
+#startups-section .card-icon::first-line { color: white; }
+/* Use invert on just the content inside */
+#startups-section .card .card-icon > * { filter: grayscale(1) brightness(100); }
 
 /* ── ESO SECTION - DARK ── */
 #eso-section {
@@ -371,25 +379,25 @@ section.features {
 
 <!-- STARTUPS SECTION - LIGHT -->
 <section class="features" id="startups-section">
-  <div class="reveal">
+  <div class="reveal" style="text-align:center">
     <p class="eyebrow">For Startups</p>
-    <h2 class="sec-title">Everything your startup needs to <em>grow</em></h2>
+    <h2 class="sec-title" style="max-width:100%">Everything your startup needs to <em>grow</em></h2>
   </div>
   <div class="grid reveal">
-    <a onclick="window.open('https://ov-stage.gsvlabsportal.com/searchprogram','_blank');return false;" href="#" class="card card-link"><div class="card-icon">🔭</div><div class="card-title">Programs</div><p class="card-desc">Discover accelerators, incubators, and programs tailored to your stage.</p></a>
-    <a onclick="window.open('https://ov-stage.gsvlabsportal.com/program?pid=2449','_blank');return false;" href="#" class="card card-link"><div class="card-icon">🛠️</div><div class="card-title">Tools</div><p class="card-desc">Unlock exclusive free and discounted access to leading AI tools and software.</p></a>
-    <a onclick="window.open('https://ov-stage.gsvlabsportal.com/program?pid=2450','_blank');return false;" href="#" class="card card-link"><div class="card-icon">🤝</div><div class="card-title">Hiring</div><p class="card-desc">Access talent networks and proven playbooks to build your team faster.</p></a>
-    <a onclick="window.open('https://ov-stage.gsvlabsportal.com/program?pid=2451','_blank');return false;" href="#" class="card card-link"><div class="card-icon">⚡</div><div class="card-title">AI Infrastructure</div><p class="card-desc">Get connected to the compute, APIs, and AI tooling to scale intelligent products.</p></a>
-    <a onclick="window.open('https://www.onevalley.com/contact-us-ventures-startups/','_blank');return false;" href="#" class="card card-link"><div class="card-icon">💰</div><div class="card-title">Funding</div><p class="card-desc">From grants to venture introductions, find the right capital for your vision.</p></a>
+    <a onclick="window.open('https://ov-stage.gsvlabsportal.com/searchprogram','_blank');return false;" href="#" class="card card-link"><div class="card-icon"><span style="filter:grayscale(1) brightness(100)">🔭</span></div><div class="card-title">Programs</div><p class="card-desc">Discover accelerators, incubators, and programs tailored to your stage.</p></a>
+    <a onclick="window.open('https://ov-stage.gsvlabsportal.com/program?pid=2449','_blank');return false;" href="#" class="card card-link"><div class="card-icon"><span style="filter:grayscale(1) brightness(100)">🛠️</span></div><div class="card-title">Tools</div><p class="card-desc">Unlock exclusive free and discounted access to leading AI tools and software.</p></a>
+    <a onclick="window.open('https://ov-stage.gsvlabsportal.com/program?pid=2450','_blank');return false;" href="#" class="card card-link"><div class="card-icon"><span style="filter:grayscale(1) brightness(100)">🤝</span></div><div class="card-title">Hiring</div><p class="card-desc">Access talent networks and proven playbooks to build your team faster.</p></a>
+    <a onclick="window.open('https://ov-stage.gsvlabsportal.com/program?pid=2451','_blank');return false;" href="#" class="card card-link"><div class="card-icon"><span style="filter:grayscale(1) brightness(100)">⚡</span></div><div class="card-title">AI Infrastructure</div><p class="card-desc">Get connected to the compute, APIs, and AI tooling to scale intelligent products.</p></a>
+    <a onclick="window.open('https://www.onevalley.com/contact-us-ventures-startups/','_blank');return false;" href="#" class="card card-link"><div class="card-icon"><span style="filter:grayscale(1) brightness(100)">💰</span></div><div class="card-title">Funding</div><p class="card-desc">From grants to venture introductions, find the right capital for your vision.</p></a>
   </div>
 </section>
 
 <!-- ESO SECTION - DARK -->
 <section class="features" id="eso-section">
-  <div class="reveal">
+  <div class="reveal" style="text-align:center">
     <p class="eyebrow">For ESOs</p>
-    <h2 class="sec-title">A Single Partnership. <em>Three Powerful Categories.</em></h2>
-    <p style="color:rgba(255,255,255,0.6);font-size:15px;max-width:640px;margin-bottom:40px;line-height:1.7">Everything OneValley delivers is organised across three value areas each designed to compound the others.</p>
+    <h2 class="sec-title" style="max-width:100%">A Single Partnership. <em>Three Powerful Categories.</em></h2>
+    <p style="color:rgba(255,255,255,0.6);font-size:15px;max-width:640px;margin:0 auto 40px;line-height:1.7">Everything OneValley delivers is organised across three value areas.</p>
   </div>
   <div class="grid reveal">
     <div class="card">
